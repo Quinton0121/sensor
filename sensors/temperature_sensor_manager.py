@@ -19,21 +19,20 @@ class TemperatureSensorManager(AbstractSensorManager):
     def __init__(self):
         """ Constructor for PressureSensorManager Class """
         super().__init__()
+
+         #Create a session
+        self.session = self.DBSession()
+
         self._sensor_readings = self.session.query(TemperatureReading).all()
-        self._last_sequence_num = len(self._sensor_readings)
 
-    def _load_reading_row(self, row):
-        """ Loads list into a TemperatureReading object """
+        self.session.commit()
+        
+        self._last_sequence_num = 0
+        for reading in self._sensor_readings:
+                        
+            if reading.get_sequence_num() > self._last_sequence_num:
+                self._last_sequence_num = reading.get_sequence_num()
 
-        reading_datetime = datetime.datetime.strptime(row[TemperatureSensorManager.DATETIME_INDEX], "%Y-%m-%d %H:%M:%S.%f")
-
-        temp_reading = TemperatureReading(reading_datetime,
-                               int(row[TemperatureSensorManager.SEQ_NUM_INDEX]),
-                               row[TemperatureSensorManager.SENSOR_NAME_INDEX],
-                               float(row[TemperatureSensorManager.LOW_INDEX]),
-                               float(row[TemperatureSensorManager.AVG_INDEX]),
-                               float(row[TemperatureSensorManager.HIGH_INDEX]),
-                               row[TemperatureSensorManager.STATUS_INDEX])
-        return temp_reading
+    
     
    

@@ -5,13 +5,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0cdfaa95-b6ac-4d22-96de-5f8fb2a9862b}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>A3Gui.py</StartupFile>
+    <StartupFile>reading_api.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -19,6 +20,7 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="gui.py" />
     <Compile Include="A3Gui.py" />
     <Compile Include="base.py">
       <SubType>Code</SubType>
@@ -46,39 +48,8 @@
     <Compile Include="sensor_results.py" />
     <Compile Include="test_pressure_reading_manager.py" />
     <Compile Include="test_temperature_reading_manager.py" />
-    <Compile Include="unittest2\__init__.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="screenshot\bad_Psensor_add.PNG" />
-    <Content Include="screenshot\bad_Psensor_del.PNG" />
-    <Content Include="screenshot\bad_Psensor_get.PNG" />
-    <Content Include="screenshot\bad_Psensor_getAll.PNG" />
-    <Content Include="screenshot\bad_Psensor_put.PNG" />
-    <Content Include="screenshot\bad_tsensor_add.PNG" />
-    <Content Include="screenshot\bad_Tsensor_del.PNG" />
-    <Content Include="screenshot\bad_Tsensor_getAll.PNG" />
-    <Content Include="screenshot\bad_Tsensor_put.PNG" />
-    <Content Include="screenshot\bad_Tsonsor_get.PNG" />
-    <Content Include="screenshot\press_del_invalid_data.PNG" />
-    <Content Include="screenshot\press_get_all.PNG" />
-    <Content Include="screenshot\press_get_invalid_data.PNG" />
-    <Content Include="screenshot\press_get_success.PNG" />
-    <Content Include="screenshot\press_post_invalid_data.PNG" />
-    <Content Include="screenshot\press_post_success.PNG" />
-    <Content Include="screenshot\press_put_invalid_data.PNG" />
-    <Content Include="screenshot\press_put_success.PNG" />
-    <Content Include="screenshot\pres_del_success.PNG" />
-    <Content Include="screenshot\pres_get_aft_put.PNG" />
-    <Content Include="screenshot\temp_del_invalid_data.PNG" />
-    <Content Include="screenshot\temp_del_success.PNG" />
-    <Content Include="screenshot\temp_get_aft_put.PNG" />
-    <Content Include="screenshot\temp_get_all.PNG" />
-    <Content Include="screenshot\temp_get_invaild_data.PNG" />
-    <Content Include="screenshot\temp_get_success.PNG" />
-    <Content Include="screenshot\temp_post_invalid_data.PNG" />
-    <Content Include="screenshot\temp_post_success.PNG" />
-    <Content Include="screenshot\temp_put_invalid_data.PNG" />
-    <Content Include="screenshot\temp_put_success.PNG" />
     <Content Include="sensors\readings.sqlite" />
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +57,6 @@
     <Folder Include="readings" />
     <Folder Include="screenshot" />
     <Folder Include="sensors" />
-    <Folder Include="unittest2" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>

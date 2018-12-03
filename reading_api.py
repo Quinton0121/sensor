@@ -76,7 +76,7 @@ def aitem(stype):
             )
     #m.load_readings()
     newreading = None
-    data = flask.request.data
+    data = flask.request.data   
     dataDict = json.loads(data)
     if True:
     # try:

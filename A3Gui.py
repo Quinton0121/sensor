@@ -9,7 +9,8 @@ class a3g:
         self.v = tkinter.StringVar()
         self.tk.geometry('625x335')
         self.temp = tkinter.Radiobutton(self.tk, text="Temperature", value="temperature",variable=self.v)
-        self.pres = tkinter.Radiobutton(self.tk, text="Pressure", value="pressure",variable=self.v)
+        self.pres = tkinter.Radiobutton(self.tk, text="Pressure", value="pressure",variable=self.v)    
+        self.v.set("temperature")
         self.addBtn = tkinter.Button(self.tk, text = "Add",     width = 15, command = lambda: self.opende(0))
         self.delBtn = tkinter.Button(self.tk, text = "Delete",  width = 15, command = self.delitem)
         self.updBtn = tkinter.Button(self.tk, text = "Update",  width = 15, command = lambda: self.opende(1))
@@ -38,35 +39,39 @@ class a3g:
         self.treeview.heading("avl", text="Average")
         self.treeview.column("hvl", width=79, anchor="center")
         self.treeview.heading("hvl", text="High")
-        self.treeview.place(x =  10, y = 10)
+        self.treeview.place(x =  10, y = 10)        
 
     def callbackFunc(self, type, values):
         if type == 1:
             # Update
             # Index start with 0 not 1, so -= 1
-            values[0] = int(values[0]) - 1
+            #values[0] = int(values[0]) - 1
 
 
             # FIXME: connect to database to update
-            requests.put("http://127.0.0.1:5000/"+self.v.get() + "/"+str(values[0]), data={"key1": "value",
-                                              "key2": "value",
-                                              "key3": "value",
-                                              "key4": "value",
-                                              "key5": "value",
-                                              "key6": "value",
-                                              "key7": "value"})
+                                                
+            requests.put("http://127.0.0.1:5000/"+self.v.get() + "/"+str(values[0]), json={"date": values[2],
+                                              "sensor_name": values[1],
+                                              "lowest_temp": values[4],
+                                              "avg_temp": values[5],
+                                              "highest_temp": values[6],
+                                              "status": values[3]})
 
-            self.treeview.delete(self.treeview.get_children("")[values[0]])
+            #self.treeview.delete(self.treeview.get_children("")[values[0]])
             # 7 items in values: first is sequence
-            self.treeview.insert("", values[0], values = values)
+            #self.delall()
+            #self.treeview.insert("",values[0], values = values)
+            #self.updateall()
+            self.getall()
         elif type == 2:
             # Get
             index = int(values[0])
-            self.delall()
+            #self.delall()
 
             # FIXME: connect to database to get
             result = requests.get("http://127.0.0.1:5000/" +self.v.get() + "/"+ values[0]).json()
-            self.treeview.insert("", "end", values = [result["key1"], result["key2"], result["key3"], result["key4"], result["key5"], result["key6"], result["key7"]])
+            self.delall()
+            self.treeview.insert("", "end", values = [result["seq_num"], result["sensor_name"], result["date"], result["status"], result["lowest_temp"], result["avg_temp"], result["highest_temp"]])
 
         else:
             # Add new item
@@ -74,10 +79,10 @@ class a3g:
             # [x, *values] usage:
             # a = ["a", "b", "c"]
             # [1, *a] => [1, "a", "b", "c"]
-            self.treeview.insert("", "end", values = [len(self.treeview.get_children("")) + 1, *values])
+            #self.treeview.insert("", "end", values = [len(self.treeview.get_children("")) + 1, *values]) 
 
-            # FIXME: connect to database to add
-            requests.post("http://127.0.0.1:5000/"+self.v.get() + "/"+"add", data={"sensor_name": values[0],
+            # FIXME: connect to database to add            
+            requests.post("http://127.0.0.1:5000/"+self.v.get() + "/add", json={"sensor_name": values[0],
                                               "date": values[1],
                                               "lowest_temp": values[3],
                                               "avg_temp": values[4],
@@ -85,11 +90,11 @@ class a3g:
                                               "status": values[2]})
 
 
-        self.updateall()
+            self.getall()
         
     def opende(self, type):
-        self.dev = de(type, self.callbackFunc)
-        self.updateall()
+        self.dev = DataEntry(type, self.callbackFunc)
+        #self.updateall()
                     
     def delitem(self):
         # FIXME: connect to database to delete
@@ -97,8 +102,9 @@ class a3g:
         #print(self.treeview.item(self.treeview.focus())["values"][0])
         id = self.treeview.item(self.treeview.focus())["values"][0]
         self.treeview.delete(self.treeview.focus())
-        self.updateall()
+        #self.updateall()
         requests.delete("http://127.0.0.1:5000/"+self.v.get() + "/"+str(id))
+        self.getall()
                     
     def delall(self):
         for i in self.treeview.get_children(""):
@@ -117,11 +123,12 @@ class a3g:
         # FIXME: connect to database to getAll
         #self.treeview.insert("", "end", values = [len(self.treeview.get_children("")) + 1, "S", datetime.datetime.now(), "OK", "1", "2", "3"])
         result = requests.get("http://127.0.0.1:5000/"+self.v.get() + "/").json()
+        self.delall()
         for res in result:
             self.treeview.insert("", "end", values = [res["seq_num"], res["sensor_name"], res["date"], res["status"], res["lowest_temp"], res["avg_temp"], res["highest_temp"]])
 
 
-class de:
+class DataEntry:
     def __init__(self, type, callbackArgs):
         self.tk = tkinter.Tk() 
         self.tk.geometry('270x335')

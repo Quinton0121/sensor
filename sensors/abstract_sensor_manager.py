@@ -4,6 +4,7 @@ from sensors.time_range import TimeRange
 from sensors.reading_stats import ReadingStats
 from readings.abstract_reading import AbstractReading
 from sqlalchemy.pool import SingletonThreadPool
+import sqlite3
 
 
 class AbstractSensorManager:
@@ -14,12 +15,12 @@ class AbstractSensorManager:
 
         #Engine - allows the session to etablishes the connection to the DB
         self.engine = create_engine("sqlite:///readings.sqlite",poolclass=SingletonThreadPool) 
+        #conn = sqlite3.connect('sqlite:///readings.sqlite', check_same_thread=False)
 
         #DB Session Maker given a SQLite database filename
         self.DBSession = sessionmaker(bind=self.engine)
 
-        #Create a session
-        self.session = self.DBSession()
+       
 
         self._observers = []
 
@@ -122,8 +123,10 @@ class AbstractSensorManager:
         """ TODO """
         
         self.session.add(reading)
-
-        self.session.commit()
+        try:
+            self.session.commit()
+        except:
+            self.session.rollback()
 
 
     def update_reading(self,id, reading):        
@@ -155,8 +158,10 @@ class AbstractSensorManager:
         #return self._sensor_readings[next(i for i,v in enumerate(self._sensor_readings) if v.get_sequence_num() == seq_num)]
         for reading in self._sensor_readings:
             if reading.get_sequence_num() == seq_num:
+                self.session.commit()
                 return reading
-                break
+                
+        
 
     def get_all_readings(self):
         """return all the reading"""
