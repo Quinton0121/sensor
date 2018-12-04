@@ -26,6 +26,7 @@ def gitem(stype, seq):
                            "seq_num":newreading.get_sequence_num(),"sensor_name":newreading.get_sensor_model(),
                            "lowest_temp":newreading.get_min_value(), "avg_temp":newreading.get_avg_value(),
                            "highest_temp":newreading.get_max_value(), "status":newreading.get_status()})
+        #return newreading.to_json()
     except:
         return app.response_class(
             'Invalid data',
@@ -126,10 +127,10 @@ def uitem(stype, seq):
                                                           seq,dataDict["lowest_temp"],
                                                           dataDict["avg_temp"],dataDict["highest_temp"],dataDict["status"])
         m.update_reading(int(seq),newreading)
-        return json.dumps({"date":datetime.strftime(newreading.get_timestamp(),'%Y-%m-%d %H:%M:%S.%f'),
-                           "seq_num":newreading.get_sequence_num(),"sensor_name":newreading.get_sensor_model(),
-                           "lowest_temp":newreading.get_min_value(), "avg_temp":newreading.get_avg_value(),
-                           "highest_temp":newreading.get_max_value(), "status":newreading.get_status()})
+        return json.dumps({"date":dataDict["date"],
+                           "seq_num":seq,"sensor_name":dataDict["sensor_name"],
+                           "lowest_temp":dataDict["lowest_temp"], "avg_temp":dataDict["avg_temp"],
+                           "highest_temp":dataDict["highest_temp"], "status":dataDict["status"]})
     except:
         return app.response_class(
             'Invalid data',

@@ -1,6 +1,8 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 from base import Base
+import json
+
 
 class AbstractReading(Base):
     """Mapping for both reading table"""
@@ -57,17 +59,6 @@ class AbstractReading(Base):
     def get_status(self):
         return self.status
 
-    def get_range(self):
-        """ Getter for the temperature range """
-        return self._max - self._min
-
-    def is_error(self):
-        """ Abstract Method - Is Reading and Error """
-        raise NotImplementedError("Must be implemented")
-
-    def get_error_msg(self):
-        """ Abstract Method - Get Error Readings """
-        raise NotImplementedError("Must be implemented")
 
     def to_json(self):
         """ TODO """

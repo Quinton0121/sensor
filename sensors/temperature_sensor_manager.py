@@ -18,21 +18,9 @@ class TemperatureSensorManager(AbstractSensorManager):
     """ Constructor for TemperatureSensorManager class """
     def __init__(self):
         """ Constructor for PressureSensorManager Class """
-        super().__init__()
-
-         #Create a session
-        self.session = self.DBSession()
-
-        self._sensor_readings = self.session.query(TemperatureReading).all()
-
-        self.session.commit()
-        
-        self._last_sequence_num = 0
-        for reading in self._sensor_readings:
-                        
-            if reading.get_sequence_num() > self._last_sequence_num:
-                self._last_sequence_num = reading.get_sequence_num()
+        super().__init__(TemperatureReading)
 
     
+
     
    
